@@ -1,25 +1,23 @@
 package controller
 
 import (
-	"fmt"
-
 	"github.com/gin-gonic/gin"
 
-	"async-to-sync/service"
-
-	xj "github.com/basgys/goxml2json"
+	"go-async-to-sync/service"
 )
 
-func (ctrl MerchantController) callbackController(c *gin.Context) {
+func (ctrl MerchantController) CallbackHandler(c *gin.Context) {
 
+	// xml body
 	body := c.Request.Body
+	// json, err := xj.Convert(body)
+	// jsonB, err := ioutil.ReadAll(body)
 
-	json, err := xj.Convert(body)
-	if err != nil {
-		fmt.Printf("Something went wrong: %s", err)
-		c.Abort()
-		return
-	}
+	// if err != nil {
+	// 	fmt.Printf("Something went wrong: %s", err)
+	// 	c.Abort()
+	// 	return
+	// }
 
-	service.Response <- json
+	service.Response <- body
 }

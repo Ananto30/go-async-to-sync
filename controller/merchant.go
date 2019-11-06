@@ -10,13 +10,13 @@ import (
 
 	uuid "github.com/satori/go.uuid"
 
-	"async-to-sync/client"
+	"go-async-to-sync/client"
 )
 
 type MerchantController struct{}
 
 type MerchantInfoReq struct {
-	msisdn string
+	msisdn string `json:"msisdn"`
 }
 
 type CPSreq struct {
@@ -25,6 +25,10 @@ type CPSreq struct {
 
 type CPSack struct {
 	ack string `xml:"ack"`
+}
+
+type DemoCpsReq struct {
+	ConversationId string `json:"conversationId"`
 }
 
 func (ctrl MerchantController) GetMerchantInfo(c *gin.Context) {
@@ -46,15 +50,21 @@ func (ctrl MerchantController) GetMerchantInfo(c *gin.Context) {
 	cnvID := hex.EncodeToString(u.Bytes())
 
 	// TODO: make exact xml req
-	cpsReq := &CPSreq{
-		conversationId: cnvID,
-	}
-	cpsAck := &CPSack{}
+	// cpsReq := &CPSreq{
+	// 	conversationId: cnvID,
+	// }
+	// cpsAck := &CPSack{}
 
-	resp := client.MakeRequest("https://soap.example.com/call", "merchantInfoAction", cnvID, cpsReq, cpsAck)
+	demo := &DemoCpsReq{
+		ConversationId: cnvID,
+	}
+
+	resp := client.MakeRestRequest("http://localhost:5000/try-async", cnvID, demo)
 	if resp == nil {
 		c.Abort()
 		return
 	}
+
+	c.JSON(http.StatusOK, resp)
 
 }
