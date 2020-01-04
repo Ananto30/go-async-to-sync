@@ -18,7 +18,7 @@ func HandleResponse() {
 		case response := <- Response:
 			var result map[string]interface{}
 			json.NewDecoder(response).Decode(&result)
-			ResponseMap[result["conversationId"].(string)] = response
+			ResponseMap[result["trackId"].(string)] = response
 
 			Broadcast <- result
 		}

@@ -1,4 +1,4 @@
-package client
+package service
 
 import (
 	"bytes"
@@ -10,8 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 
 	gowsdl "github.com/hooklift/gowsdl/soap"
-
-	"go-async-to-sync/service"
 )
 
 func MakeSoapRequest(url, action, conversationID string, req, res interface{}) gin.H {
@@ -23,7 +21,7 @@ func MakeSoapRequest(url, action, conversationID string, req, res interface{}) g
 	}
 
 	for {
-		resp := <-service.Broadcast
+		resp := <-Broadcast
 		id, found := resp["conversationId"]
 		if found && id == conversationID {
 			// TODO: need to delete from the ResponseMap
@@ -36,12 +34,6 @@ func MakeSoapRequest(url, action, conversationID string, req, res interface{}) g
 
 func MakeRestRequest(url, conversationID string, body interface{}) gin.H {
 
-	// var buf bytes.Buffer
-	// enc := gob.NewEncoder(&buf)
-	// err := enc.Encode(body)
-	// if err != nil {
-	// 	panic(err)
-	// }
 	jsonBody, err := json.Marshal(body)
 	if err != nil {
 		panic(err)
@@ -53,7 +45,7 @@ func MakeRestRequest(url, conversationID string, body interface{}) gin.H {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 
 	fmt.Println("response Status:", resp.Status)
@@ -63,7 +55,7 @@ func MakeRestRequest(url, conversationID string, body interface{}) gin.H {
 	fmt.Println("response Body:", string(bodyR))
 
 	for {
-		resp := <-service.Broadcast
+		resp := <-Broadcast
 		id, found := resp["conversationId"]
 		if found && id == conversationID {
 			// TODO: need to delete from the ResponseMap

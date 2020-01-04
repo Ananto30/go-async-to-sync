@@ -10,10 +10,10 @@ import (
 func main() {
 	r := gin.Default()
 
-	merchant := new(controller.MerchantController)
+	asyncCtrl := new(controller.AsyncController)
 
-	r.POST("/merchantInfo", merchant.GetMerchantInfo)
-	r.POST("/result", merchant.CallbackHandler)
+	r.POST("/async", asyncCtrl.GetAsyncInfo)
+	r.POST("/result", asyncCtrl.CallbackHandler)
 
 	go service.HandleResponse()
 	
