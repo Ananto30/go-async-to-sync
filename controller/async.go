@@ -9,19 +9,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// AsyncController ...
 type AsyncController struct{}
 
-func (ctrl AsyncController) GetAsyncInfo(c *gin.Context) {
+// GetBalance controller parse the request and send to service
+func (ctrl AsyncController) GetBalance(c *gin.Context) {
 
-	var infoReq dto.DemoInfoReq
+	var balReq dto.DemoBalanceReq
 
-	if c.BindJSON(&infoReq) != nil {
-		c.JSON(http.StatusNotAcceptable, gin.H{"message": "Invalid body", "body": infoReq})
+	if c.BindJSON(&balReq) != nil {
+		c.JSON(http.StatusNotAcceptable, gin.H{"message": "Invalid body", "body": balReq})
 		c.Abort()
 		return
 	}
 
-	resp, err := service.GetAsyncInfo()
+	resp, err := service.GetBalance()
 	if err != nil {
 		c.Abort()
 	}

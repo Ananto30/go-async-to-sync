@@ -27,10 +27,10 @@ def make_request(track_id):
 
 
 # Start a worker processes
-pool = Pool(processes=1)
+pool = Pool(processes=4)
 
 
-@app.route("/try-async", methods=["POST"])
+@app.route("/async-balance", methods=["POST"])
 def try_async():
     """
     Request handler for async request, takes trackId in body

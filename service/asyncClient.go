@@ -33,7 +33,7 @@ func MakeSoapRequest(url, action, trackID string, req, res interface{}) gin.H {
 
 }
 
-// MakeRestRequest makes a REST request
+// MakeRestRequest makes a REST request and wait for a signal from Broadcast
 func MakeRestRequest(url, trackID string, body interface{}) gin.H {
 
 	jsonBody, err := json.Marshal(body)
@@ -59,8 +59,9 @@ func MakeRestRequest(url, trackID string, body interface{}) gin.H {
 	for {
 		<-Broadcast
 		asyncResp, found := ResponseMap[trackID]
+		fmt.Printf("%+v\n", ResponseMap)
 		if found {
-			// TODO: need to delete from the ResponseMap
+			delete(ResponseMap, trackID)
 			return asyncResp
 		}
 

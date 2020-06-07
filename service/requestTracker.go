@@ -1,30 +1,31 @@
 package service
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
 
 	"github.com/gin-gonic/gin"
 )
 
+// ResponseMap stores response against trackId
 var ResponseMap = make(map[string]gin.H)
 
-var Broadcast = make(chan []byte)
-var Response = make(chan io.Reader)
+// Broadcast channel is responsible to ping waiting clients for a new entry in ResponseMap
+var Broadcast = make(chan bool)
 
-func HandleResponse() {
-	b := make([]byte, 1)
+// WebhookResponse comes from the callback handler
+var WebhookResponse = make(chan gin.H)
+
+// WebhookDispatcher dispatch a single byte in the Broadcast channel.
+// This Broadcast is recieved by the requests that are hold and listening to Broadcast channel
+func WebhookDispatcher() {
 	for {
 		select {
-		case response := <-Response:
-			var result map[string]interface{}
-			json.NewDecoder(response).Decode(&result)
+		case response := <-WebhookResponse:
 
-			fmt.Printf("%+v\n", result)
-			ResponseMap[result["trackId"].(string)] = result
+			fmt.Printf("%+v\n", response)
+			ResponseMap[response["trackId"].(string)] = response
 
-			Broadcast <- b
+			Broadcast <- true
 		}
 	}
 

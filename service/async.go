@@ -10,7 +10,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-func GetAsyncInfo() (gin.H, error) {
+func GetBalance() (gin.H, error) {
 
 	u := uuid.NewV4()
 	trackID := hex.EncodeToString(u.Bytes())
@@ -20,7 +20,7 @@ func GetAsyncInfo() (gin.H, error) {
 	}
 
 	// here we call our async service
-	resp := MakeRestRequest("http://localhost:5000/try-async", trackID, demo)
+	resp := MakeRestRequest("http://localhost:5000/async-balance", trackID, demo)
 	if resp == nil {
 		return nil, errors.New("No response from async server")
 	}

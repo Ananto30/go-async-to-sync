@@ -1,8 +1,8 @@
 package dto
 
-// DemoInfoReq is sample request to the go server
-type DemoInfoReq struct {
-	ArticleID string `json:"articleId"`
+// DemoBalanceReq is sample request to the go server
+type DemoBalanceReq struct {
+	AccountID string `json:"accountId"`
 }
 
 // DemoAsyncReq is sample async request to the pyhton server

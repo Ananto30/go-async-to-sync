@@ -12,10 +12,11 @@ func main() {
 
 	asyncCtrl := new(controller.AsyncController)
 
-	r.POST("/async", asyncCtrl.GetAsyncInfo)
+	r.POST("/async", asyncCtrl.GetBalance)
 	r.POST("/result", asyncCtrl.CallbackHandler)
 
-	go service.HandleResponse()
+	// Start the dispatcher for webhook callbacks
+	go service.WebhookDispatcher()
 
 	r.Run(":8005") // listen and serve on 0.0.0.0:8005 (for windows "localhost:8005")
 }
