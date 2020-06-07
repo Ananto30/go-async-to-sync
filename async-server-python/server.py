@@ -26,15 +26,20 @@ def make_request(track_id):
     print(f"Callback URL called with track_id {track_id}")
 
 
+# Start a worker processes
+pool = Pool(processes=1)
+
+
 @app.route("/try-async", methods=["POST"])
 def try_async():
+    """
+    Request handler for async request, takes trackId in body
+    """
 
     body = request.json
     # Parse the trackId from body
     track_id = body["trackId"]
 
-    # Start a worker processes
-    pool = Pool(processes=1)
     # This will make the async request to the callback url
     # and this is non-blocking
     pool.apply_async(make_request, [track_id])

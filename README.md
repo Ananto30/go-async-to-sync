@@ -11,23 +11,28 @@ Go channel cannot communicate between several servers right? So we can use  a si
 ## Start async server
 This server is written in python. It's in the `async-server-python` folder. 
 You can create a venv if you wish with python 3.7(+)
-```
+```bash
+# Make virtual env 
 cd async-server-python
 python3 -m venv venv
 source venv/bin/activate
-```
-Install the requirements -
-`pip install -r requirements.txt`
 
-Start the server -
-`python server.py`
+# Install the requirements 
+pip install -r requirements.txt
+
+# Start the server 
+OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES python server.py
+```
+This `OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES` has a broad history, [here](https://stackoverflow.com/questions/50168647/multiprocessing-causes-python-to-crash-and-gives-an-error-may-have-been-in-progr#comment92429088_52230415) is the explanation.
 
 ## Start the Go server
 This server will do all the works to make that async request to sync. 
 Install the dependencies (I used Dep as dependency manager) - 
-`dep ensure`
-Start the server - 
-`go run main.go`
+```bash
+dep ensure
+# Start the server 
+go run main.go
+```
 
 ## Test it
 Endpoint - [localhost:8005/async](localhost:8005/async) 

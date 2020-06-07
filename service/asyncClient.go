@@ -12,7 +12,8 @@ import (
 	gowsdl "github.com/hooklift/gowsdl/soap"
 )
 
-func MakeSoapRequest(url, action, conversationID string, req, res interface{}) gin.H {
+// MakeSoapRequest for SOAP request, legacy services
+func MakeSoapRequest(url, action, trackID string, req, res interface{}) gin.H {
 
 	client := gowsdl.NewClient(url)
 	if err := client.Call(action, req, res); err != nil {
@@ -21,18 +22,19 @@ func MakeSoapRequest(url, action, conversationID string, req, res interface{}) g
 	}
 
 	for {
-		resp := <-Broadcast
-		id, found := resp["conversationId"]
-		if found && id == conversationID {
+		<-Broadcast
+		asyncResp, found := ResponseMap[trackID]
+		if found {
 			// TODO: need to delete from the ResponseMap
-			return resp
+			return asyncResp
 		}
 
 	}
 
 }
 
-func MakeRestRequest(url, conversationID string, body interface{}) gin.H {
+// MakeRestRequest makes a REST request
+func MakeRestRequest(url, trackID string, body interface{}) gin.H {
 
 	jsonBody, err := json.Marshal(body)
 	if err != nil {
@@ -55,11 +57,11 @@ func MakeRestRequest(url, conversationID string, body interface{}) gin.H {
 	fmt.Println("response Body:", string(bodyR))
 
 	for {
-		resp := <-Broadcast
-		id, found := resp["conversationId"]
-		if found && id == conversationID {
+		<-Broadcast
+		asyncResp, found := ResponseMap[trackID]
+		if found {
 			// TODO: need to delete from the ResponseMap
-			return resp
+			return asyncResp
 		}
 
 	}

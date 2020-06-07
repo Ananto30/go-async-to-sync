@@ -6,7 +6,7 @@ import (
 	"github.com/Ananto30/go-async-to-sync/service"
 )
 
-// CallbackHandler will 
+// CallbackHandler will
 func (ctrl AsyncController) CallbackHandler(c *gin.Context) {
 
 	body := c.Request.Body
