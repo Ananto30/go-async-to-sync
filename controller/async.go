@@ -1,9 +1,10 @@
 package controller
 
 import (
-	"go-async-to-sync/dto"
-	"go-async-to-sync/service"
 	"net/http"
+
+	"github.com/Ananto30/go-async-to-sync/dto"
+	"github.com/Ananto30/go-async-to-sync/service"
 
 	"github.com/gin-gonic/gin"
 )
@@ -24,7 +25,7 @@ func (ctrl AsyncController) GetAsyncInfo(c *gin.Context) {
 	if err != nil {
 		c.Abort()
 	}
-	
+
 	c.JSON(http.StatusOK, resp)
 
 }

@@ -3,8 +3,8 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 
-	"go-async-to-sync/controller"
-	"go-async-to-sync/service"
+	"github.com/Ananto30/go-async-to-sync/controller"
+	"github.com/Ananto30/go-async-to-sync/service"
 )
 
 func main() {
@@ -16,6 +16,6 @@ func main() {
 	r.POST("/result", asyncCtrl.CallbackHandler)
 
 	go service.HandleResponse()
-	
-	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+
+	r.Run(":8005") // listen and serve on 0.0.0.0:8005 (for windows "localhost:8005")
 }

@@ -7,33 +7,41 @@ from multiprocessing import Pool
 app = Flask(__name__)
 
 
+# This is actually the client's webhook, where the async response will be sent
+callback_url = "http://localhost:8005/result"
+
+
 def make_request(track_id):
+    """
+    This is a mock async processor, which post the response to the registered webhook
+    """
+    # Mocking work
     time.sleep(3)
 
-    callback_url = "http://localhost:8080/result"
-    body = {
-        "message": "hello world",
-        "trackId": track_id
-    }
-    requests.post(callback_url, json=body)
+    # A demo response to the webhook
+    response = {"message": "hello world", "trackId": track_id}
+    # POST request to the webhook
+    requests.post(callback_url, json=response)
 
-    print("Callback URL called")
+    print(f"Callback URL called with track_id {track_id}")
 
 
-@app.route('/try-async', methods=['POST'])
-def hello_world():
+@app.route("/try-async", methods=["POST"])
+def try_async():
 
     body = request.json
-    track_id = body['trackId']
+    # Parse the trackId from body
+    track_id = body["trackId"]
 
-    pool = Pool(processes=1) # Start a worker processes.
+    # Start a worker processes
+    pool = Pool(processes=1)
     # This will make the async request to the callback url
-    result = pool.apply_async(make_request, [track_id])
+    # and this is non-blocking
+    pool.apply_async(make_request, [track_id])
 
     # Just a demo response, one may get acknowledgement of the async request
-    return 'Hello, World!'
+    return "Hello, World!"
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run()

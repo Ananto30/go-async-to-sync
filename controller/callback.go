@@ -3,7 +3,7 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 
-	"go-async-to-sync/service"
+	"github.com/Ananto30/go-async-to-sync/service"
 )
 
 // CallbackHandler will 

@@ -3,8 +3,8 @@ package service
 import (
 	"encoding/hex"
 	"errors"
-	"fmt"
-	"go-async-to-sync/dto"
+
+	"github.com/Ananto30/go-async-to-sync/dto"
 
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
@@ -12,11 +12,7 @@ import (
 
 func GetAsyncInfo() (gin.H, error) {
 
-	u, err := uuid.NewV4()
-	if err != nil {
-		fmt.Printf("Something went wrong: %s", err)
-		return nil, err
-	}
+	u := uuid.NewV4()
 	trackID := hex.EncodeToString(u.Bytes())
 
 	demo := &dto.DemoAsyncReq{

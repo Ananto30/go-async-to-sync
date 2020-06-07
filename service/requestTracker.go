@@ -1,9 +1,10 @@
 package service
 
 import (
-	"github.com/gin-gonic/gin"
 	"encoding/json"
 	"io"
+
+	"github.com/gin-gonic/gin"
 )
 
 var ResponseMap = make(gin.H)
@@ -15,7 +16,7 @@ func HandleResponse() {
 
 	for {
 		select {
-		case response := <- Response:
+		case response := <-Response:
 			var result map[string]interface{}
 			json.NewDecoder(response).Decode(&result)
 			ResponseMap[result["trackId"].(string)] = response
