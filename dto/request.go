@@ -7,5 +7,6 @@ type DemoBalanceReq struct {
 
 // DemoAsyncReq is sample async request to the pyhton server
 type DemoAsyncReq struct {
-	TrackID string `json:"trackId"`
+	TrackID   string `json:"trackId"`
+	AccountID string `json:"accountId"`
 }

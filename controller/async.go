@@ -23,7 +23,7 @@ func (ctrl AsyncController) GetBalance(c *gin.Context) {
 		return
 	}
 
-	resp, err := service.GetBalance()
+	resp, err := service.GetBalance(balReq.AccountID)
 	if err != nil {
 		c.Abort()
 	}

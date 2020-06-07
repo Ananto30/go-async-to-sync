@@ -51,8 +51,6 @@ func MakeRestRequest(url, trackID string, body interface{}) gin.H {
 	}
 
 	fmt.Println("response Status:", resp.Status)
-	fmt.Println("response Headers:", resp.Header)
-	fmt.Println("request body:", req.Body)
 	bodyR, _ := ioutil.ReadAll(resp.Body)
 	fmt.Println("response Body:", string(bodyR))
 
