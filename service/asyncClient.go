@@ -8,30 +8,28 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-
-	gowsdl "github.com/hooklift/gowsdl/soap"
 )
 
 // MakeSoapRequest for SOAP request, legacy services
-func MakeSoapRequest(url, action, trackID string, req, res interface{}) gin.H {
-
-	client := gowsdl.NewClient(url)
-	if err := client.Call(action, req, res); err != nil {
-		fmt.Printf("Something went wrong: %s", err)
-		return nil
-	}
-
-	for {
-		<-Broadcast
-		asyncResp, found := ResponseMap[trackID]
-		if found {
-			// TODO: need to delete from the ResponseMap
-			return asyncResp
-		}
-
-	}
-
-}
+//func MakeSoapRequest(url, action, trackID string, req, res interface{}) gin.H {
+//
+//	client := gowsdl.NewClient(url)
+//	if err := client.Call(action, req, res); err != nil {
+//		fmt.Printf("Something went wrong: %s", err)
+//		return nil
+//	}
+//
+//	for {
+//		<-Broadcast
+//		asyncResp, found := ResponseMap[trackID]
+//		if found {
+//			// TODO: need to delete from the ResponseMap
+//			return asyncResp
+//		}
+//
+//	}
+//
+//}
 
 // MakeRestRequest makes a REST request and wait for a signal from Broadcast
 func MakeRestRequest(url, trackID string, body interface{}) gin.H {
@@ -56,10 +54,11 @@ func MakeRestRequest(url, trackID string, body interface{}) gin.H {
 
 	for {
 		<-Broadcast
-		asyncResp, found := ResponseMap[trackID]
-		fmt.Printf("%+v\n", ResponseMap)
+		asyncResp, found := ResponseMap.Get(trackID)
+
+		fmt.Println("paisi mama", asyncResp, found, trackID, ResponseMap)
 		if found {
-			delete(ResponseMap, trackID)
+			ResponseMap.Delete(trackID)
 			return asyncResp
 		}
 
