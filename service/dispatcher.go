@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"github.com/Ananto30/go-async-to-sync/pubsub"
 	"sync"
 	"time"
 
@@ -43,7 +44,6 @@ func NewSafeMap() *SafeMap {
 	return sm
 }
 
-
 // ResponseMap stores response against trackId
 var ResponseMap = NewSafeMap()
 
@@ -78,7 +78,7 @@ func WebhookDispatcher() {
 We can use either of two methods for ensuring all the webhooks are sent to all of the subscribers -
 1. Periodically check the ResponseMap
 2. Fan-out Broadcast to all subscribers
- */
+*/
 
 // PeriodicalMapChecker checks the ResponseMap periodically to make sure all items in the map gets dispatched.
 // Downside is when many requests are queued, it will be the slowest to process
@@ -91,6 +91,23 @@ func PeriodicalMapChecker() {
 				fmt.Println("dispatching from periodical map checker")
 				Broadcast <- true
 			}
+		}
+	}
+
+}
+
+var PubSub = pubsub.NewPubsub()
+var PubSubCl = PubSubClient{pubsub: PubSub}
+
+//
+func WebhookPublisher() {
+
+	for {
+		select {
+		case response := <-WebhookResponse:
+
+			PubSub.Publish(response["trackId"].(string), response)
+
 		}
 	}
 

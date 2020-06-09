@@ -21,7 +21,8 @@ func GetBalance(accountID string) (gin.H, error) {
 	}
 
 	// here we call our async service
-	resp := MakeRestRequest("http://localhost:5000/async-balance", trackID, demo)
+	//resp := MakeRestRequest("http://localhost:5000/async-balance", trackID, demo)
+	resp := PubSubCl.MakeRestRequestSubscriber("http://localhost:5000/async-balance", trackID, demo)
 	if resp == nil {
 		return nil, errors.New("no response from async server")
 	}

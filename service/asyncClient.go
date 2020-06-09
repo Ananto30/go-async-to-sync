@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/Ananto30/go-async-to-sync/pubsub"
 	"io/ioutil"
 	"net/http"
 
@@ -63,5 +64,41 @@ func MakeRestRequest(url, trackID string, body interface{}) gin.H {
 		}
 
 	}
+
+}
+
+type PubSubClient struct {
+	pubsub *pubsub.Pubsub
+}
+
+func (ps *PubSubClient) MakeRestRequestSubscriber(url, trackID string, body interface{}) gin.H {
+
+	jsonBody, err := json.Marshal(body)
+	if err != nil {
+		panic(err)
+	}
+
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonBody))
+	req.Header.Set("Content-Type", "application/json")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println("response Status:", resp.Status)
+	bodyR, _ := ioutil.ReadAll(resp.Body)
+	fmt.Println("response Body:", string(bodyR))
+
+	ch := make(chan gin.H)
+
+	ps.pubsub.Subscribe(trackID, ch)
+
+	data := <-ch
+
+	ps.pubsub.Close(trackID)
+
+	return data
 
 }
